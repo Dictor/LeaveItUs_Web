@@ -35,4 +35,4 @@
 - 김상윤 (ndkim11@naver.com), Github Id: ndkim11
 
 ## 저작권 및 사용권 정보
- * [AGPL](LICENSE.md)
+[AGPL](LICENSE)
