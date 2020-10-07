@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify';
+import vuetify_ko from 'vuetify/es5/locale/ko'
 import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
@@ -18,4 +19,8 @@ export default new Vuetify({
       },
     },
   },
+  lang: {
+    locales: {vuetify_ko},
+    current: 'vuetify_ko',
+  }
 });
