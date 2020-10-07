@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Brief from '../views/Brief.vue'
 import Tag from '../views/Tag.vue'
-import Device from '../views/Device.vue'
+import Locker from '../views/Locker.vue'
 import Log from '../views/Log.vue'
 import Personnel from '../views/Personnel.vue'
 Vue.use(VueRouter)
@@ -19,9 +19,9 @@ const routes = [
     component: Tag
   },
   {
-    path: '/device',
-    name: 'Device',
-    component: Device
+    path: '/locker',
+    name: 'Locker',
+    component: Locker
   },
   {
     path: '/personnel',

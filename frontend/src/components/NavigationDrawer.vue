@@ -30,7 +30,7 @@
             return {
                 items: [
                     { title: '태그(필증) 관리', icon: 'mdi-bookmark-multiple-outline', link: "tag"},
-                    { title: '기기 관리', icon: 'mdi-briefcase', link: "device"},
+                    { title: '보관함 관리', icon: 'mdi-briefcase', link: "locker"},
                     { title: '병력 관리', icon: 'mdi-account-details', link: "personnel"},
                     { title: '통계 및 기록', icon: 'mdi-database-search', link: "log"},
                 ],
