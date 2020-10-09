@@ -26,3 +26,6 @@ clean:
 
 build: info clean build-backend build-frontend
 
+install:
+	cd frontend && npm update
+
