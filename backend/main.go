@@ -59,6 +59,19 @@ func main() {
 		CreateRow(&tag)
 		return c.NoContent(http.StatusOK)
 	})
+	e.DELETE("/api/tag", func(c echo.Context) error {
+		tag := TagDeleteRequest{}
+		if err := c.Bind(&tag); err != nil {
+			e.Logger.Info(err)
+			return c.NoContent(http.StatusBadRequest)
+		}
+		if err := c.Validate(tag); err != nil {
+			e.Logger.Info(err)
+			return c.NoContent(http.StatusBadRequest)
+		}
+		DeleteRowByKeys(&Tag{}, &tag.UIDs)
+		return c.NoContent(http.StatusOK)
+	})
 
 	//static resource
 	e.GET("/*", VueRouterStatic("static"))
