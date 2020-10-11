@@ -2,8 +2,8 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 
-	"github.com/kennygrant/sanitize"
 	"github.com/labstack/echo/v4"
 )
 
@@ -11,7 +11,7 @@ import (
 func VueRouterStatic(root string) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		u := c.Request().URL
-		path := sanitize.Path(u.EscapedPath())
+		path := filepath.Clean(u.EscapedPath())
 		c.Logger().Debugf("inspect: %s > %s\n", u, path)
 		var servePath string
 
