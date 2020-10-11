@@ -7,7 +7,7 @@ import router from './router'
 
 Vue.config.productionTip = false
 
-new Vue({
+window.LeaveItUsApp = new Vue({
   vuetify,
   router,
   render: h => h(App)
