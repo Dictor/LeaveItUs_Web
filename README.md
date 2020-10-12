@@ -1,7 +1,7 @@
 # **맡기시오** (팀 *797은거꾸로해도797*)
 ![팀 로고](logo.png)
 
-[**WEB 저장소**](github.com/osamhack2020/WEB_LeaveItUs_797IsPalindrome) | [**IoT 저장소**](github.com/osamhack2020/IoT_LeaveItUs_797IsPalindrome)
+[**WEB 저장소**](https://github.com/osamhack2020/WEB_LeaveItUs_797IsPalindrome) | [**IoT 저장소**](https://github.com/osamhack2020/IoT_LeaveItUs_797IsPalindrome)
 
 ## 소개 및 설명 동영상
 **맡기시오 (Leave It Us)**
@@ -71,9 +71,9 @@ samsung 12.0 11.1-11.2
 #golang은 링크의 설치 방법을 따르세요.
 sudo apt install npm
 ```
-아래의 명령을 프로젝트 루트 디렉터리`(WEB_LeaveItUs_797IsPalindrome/)` 에서 실행합니다.
+프로젝트 의존성을 설치하기 위해 아래의 명령을 프로젝트 루트 디렉터리`(WEB_LeaveItUs_797IsPalindrome/)` 에서 실행합니다.
 ```
-sudo make install #프로젝트 의존성 설치
+sudo make install
 ```
 프로젝트를 빌드하고 싶다면 아래와 같이 실행합니다. 루트 하위 `output/`에 프론트앤드 번들과 백앤드가 빌드됩니다.
 ```
