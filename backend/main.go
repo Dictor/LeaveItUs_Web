@@ -56,8 +56,7 @@ func main() {
 			e.Logger.Info(err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		CreateRow(&tag)
-		return c.NoContent(http.StatusOK)
+		return ParseSqlErrorToResponse(CreateRow(&tag), c)
 	})
 	e.DELETE("/api/tag", func(c echo.Context) error {
 		tag := TagDeleteRequest{}
@@ -69,8 +68,7 @@ func main() {
 			e.Logger.Info(err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		DeleteRowByKeys(&Tag{}, &tag.UIDs)
-		return c.NoContent(http.StatusOK)
+		return ParseSqlErrorToResponse(DeleteRowByKeys(&Tag{}, &tag.UIDs), c)
 	})
 
 	//static resource
@@ -79,4 +77,32 @@ func main() {
 	SetDBHander(TestDBHander())
 	Migrate()
 	e.Logger.Fatal(e.Start(":80"))
+}
+
+func ResponseToEcho(code int, msg string, c echo.Context) error {
+	if code == http.StatusOK {
+		return c.NoContent(http.StatusOK)
+	} else {
+		return c.JSON(code, map[string]string{"msg": msg})
+	}
+}
+
+func ParseSqlErrorToResponse(err error, c echo.Context) error {
+	if err == nil {
+		return c.NoContent(http.StatusOK)
+	} else {
+		msg := err.Error()
+		var (
+			code    int
+			respmsg string
+		)
+		if msg[0:6] == "UNIQUE" {
+			code = http.StatusForbidden
+			respmsg = "req_violate_unique"
+		} else {
+			code = http.StatusInternalServerError
+			respmsg = "unexpected_error"
+		}
+		return c.JSON(code, map[string]string{"msg": respmsg})
+	}
 }
