@@ -104,9 +104,7 @@ export default {
                 .then(() => {
                     this.msgs.push({msg: "추가 성공!", kind: "success"});
                 })
-                .catch((err) => {
-                    this.msgs.push({msg: err, kind: "error"});
-                });
+                .catch(this.handleError);
         },
         deleteTag: function() {
             const t = this.selected.map(x => x.uid);
@@ -120,9 +118,7 @@ export default {
                 .then(() => {
                     this.msgs.push({msg: "삭제 성공!", kind: "success"});
                 })
-                .catch((err) => {
-                    this.msgs.push({msg: err, kind: "error"});
-                });
+                .catch(this.handleError);
         },
         listTag: function(delay) {
             const req = () => {
@@ -131,14 +127,27 @@ export default {
                         this.tags = res.data;
                         this.msgs.push({msg: "불러오기 성공!", kind: "success"});
                     })
-                    .catch((err) => {
-                        this.msgs.push({msg: err, kind: "error"});
-                    });
+                    .catch(this.handleError);
             }
             if (!delay || delay === 0) {
                 req();
             } else {
                 setTimeout(req, delay);
+            }
+        },
+        handleError: function(error) {
+            if (error.response) {
+                if (error.response.data.msg) {
+                    this.msgs.push({msg: "서버의 실패 응답 : " + error.response.data.msg + "(" + error.response.status + ")", kind: "error"});
+                } else {
+                    this.msgs.push({msg: error + " (" + error.response.status + ")", kind: "error"});
+                }
+            }
+            else if (error.request) {
+                this.msgs.push({msg: "응답 수신 실패", kind: "error"});
+            }
+            else {
+                this.msgs.push({msg: "요청 실패", kind: "error"});
             }
         },
         mounted() { 
