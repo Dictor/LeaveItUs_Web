@@ -5,7 +5,6 @@ go 1.15
 require (
 	github.com/dictor/echologrus v1.0.0
 	github.com/go-playground/validator/v10 v10.4.0
-	github.com/kennygrant/sanitize v1.2.4
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/labstack/gommon v0.3.0
 	gorm.io/driver/sqlite v1.1.3
