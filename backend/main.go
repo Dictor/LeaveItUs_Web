@@ -79,14 +79,6 @@ func main() {
 	e.Logger.Fatal(e.Start(":80"))
 }
 
-// ResponseToEcho converts error information to echo response.
-func ResponseToEcho(code int, msg string, c echo.Context) error {
-	if code == http.StatusOK {
-		return c.NoContent(http.StatusOK)
-	}
-	return c.JSON(code, map[string]string{"msg": msg})
-}
-
 // ParseSQLErrorToResponse parses sql error message and returns echo response
 func ParseSQLErrorToResponse(err error, c echo.Context) error {
 	if err == nil {
