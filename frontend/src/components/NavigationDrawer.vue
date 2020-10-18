@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer clipped  app>
+    <v-navigation-drawer app mobile-breakpoint=768>
         <v-list-item>
             <router-link to="/" tag="v-list-item-content">
                 <v-list-item-title class="title">
