@@ -18,7 +18,7 @@ type (
 	Locker struct {
 		UID        string         `json:"uid" validate:"required,printascii" gorm:"primaryKey,unique"` // locker's unique id
 		ID         string         `json:"id" validate:"required,printascii"`                           // locker's managing id
-		Room       Room           `json:"room_id" validate:"required,printascii"`                      // id of room where locker exist in
+		Room       Room           `json:"room" validate:"required,printascii"`                         // id of room where locker exist in
 		Security   LockerSecurity `json:"security" validate:"required"`                                // security data
 		Status     LockerStatus   `json:"status" validate:"required"`                                  // locker's status
 		Tags       *[]Tag         `json:"tags" validate:"required"`                                    // Slice of tags which are stored in locker
