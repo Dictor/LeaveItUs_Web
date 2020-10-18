@@ -56,7 +56,7 @@ func main() {
 			e.Logger.Info(err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		return ParseSqlErrorToResponse(CreateRow(&tag), c)
+		return ParseSQLErrorToResponse(CreateRow(&tag), c)
 	})
 	e.DELETE("/api/tag", func(c echo.Context) error {
 		tag := TagDeleteRequest{}
@@ -68,7 +68,7 @@ func main() {
 			e.Logger.Info(err)
 			return c.NoContent(http.StatusBadRequest)
 		}
-		return ParseSqlErrorToResponse(DeleteRowByKeys(&Tag{}, &tag.UIDs), c)
+		return ParseSQLErrorToResponse(DeleteRowByKeys(&Tag{}, &tag.UIDs), c)
 	})
 
 	//static resource
@@ -79,30 +79,30 @@ func main() {
 	e.Logger.Fatal(e.Start(":80"))
 }
 
+// ResponseToEcho converts error information to echo response.
 func ResponseToEcho(code int, msg string, c echo.Context) error {
 	if code == http.StatusOK {
 		return c.NoContent(http.StatusOK)
-	} else {
-		return c.JSON(code, map[string]string{"msg": msg})
 	}
+	return c.JSON(code, map[string]string{"msg": msg})
 }
 
-func ParseSqlErrorToResponse(err error, c echo.Context) error {
+// ParseSQLErrorToResponse parses sql error message and returns echo response
+func ParseSQLErrorToResponse(err error, c echo.Context) error {
 	if err == nil {
 		return c.NoContent(http.StatusOK)
-	} else {
-		msg := err.Error()
-		var (
-			code    int
-			respmsg string
-		)
-		if msg[0:6] == "UNIQUE" {
-			code = http.StatusForbidden
-			respmsg = "req_violate_unique"
-		} else {
-			code = http.StatusInternalServerError
-			respmsg = "unexpected_error"
-		}
-		return c.JSON(code, map[string]string{"msg": respmsg})
 	}
+	msg := err.Error()
+	var (
+		code    int
+		respmsg string
+	)
+	if msg[0:6] == "UNIQUE" {
+		code = http.StatusForbidden
+		respmsg = "req_violate_unique"
+	} else {
+		code = http.StatusInternalServerError
+		respmsg = "unexpected_error"
+	}
+	return c.JSON(code, map[string]string{"msg": respmsg})
 }
