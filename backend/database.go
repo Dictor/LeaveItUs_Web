@@ -30,15 +30,17 @@ func ListTable(result interface{}) error {
 	return currentDatabase.Find(result).Error
 }
 
+// DeleteRow deletes rows, row can be every type of pointer
 func DeleteRow(row interface{}) error {
 	return currentDatabase.Delete(row).Error
 }
 
+// DeleteRowByKeys deletes row by primary key. model can be every type of pointer.
 func DeleteRowByKeys(model interface{}, keys interface{}) error {
 	return currentDatabase.Delete(model, keys).Error
 }
 
 // Migrate is migrate database with all models
 func Migrate() {
-	currentDatabase.AutoMigrate(&Tag{})
+	currentDatabase.AutoMigrate(&Tag{}, &Person{})
 }
