@@ -29,25 +29,29 @@ var (
 )
 
 func main() {
+	// Initialize echo and it's logger
 	e := echo.New()
 	Logger = elogrus.Attach(e)
 	e.Validator = &CustomValidator{validator: validator.New()}
 	Logger.Infof("leave-it-us backend %s (%s) : %s\n", gitTag, gitHash, buildDate)
 
+	// Show indicating message if debug mode
 	if displayDebug == "true" {
 		Logger.SetLevel(log.DEBUG)
 		Logger.Debugln("run in debug mode")
 	}
 
-	e.GET("/api/tag", ReadHandler(Tag{}))
-	e.POST("/api/tag", CreateHandler(Tag{}))
-	e.DELETE("/api/tag", DeleteHandler(Tag{}))
+	// Attach api handlers
+	AttachRoutes(e)
 
-	//static resource
+	// Serving frontend static resource
 	e.GET("/*", VueRouterStatic("static"))
 
+	// Initialize database
 	SetDBHander(TestDBHander())
 	Migrate()
+
+	// Start listening
 	e.Logger.Fatal(e.Start(":80"))
 }
 
