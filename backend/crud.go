@@ -7,6 +7,15 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+/*
+CrudModel is interface for CRUD generic handler functions.
+When struct implement this interface, it can be interact database through generic handlers can treat.
+
+- InstancePointer : Return empty struct instance's pointer.
+- DeleteInstancePointer : Return empty delete request binding struct instance's pointer.
+- DeleteKey : Return primary keys from given delete request struct instance's pointer.
+- SlicePointer : Return empty struct slice instance's pointer.
+*/
 type CrudModel interface {
 	InstancePointer() interface{}
 	DeleteInstancePointer() interface{}
