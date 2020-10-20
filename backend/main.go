@@ -39,37 +39,9 @@ func main() {
 		Logger.Debugln("run in debug mode")
 	}
 
-	e.GET("/api/tag", func(c echo.Context) error {
-		tags := []Tag{}
-		if ListTable(&tags) != nil {
-			return c.NoContent(http.StatusInternalServerError)
-		}
-		return c.JSON(http.StatusOK, &tags)
-	})
-	e.POST("/api/tag", func(c echo.Context) error {
-		tag := Tag{}
-		if err := c.Bind(&tag); err != nil {
-			e.Logger.Info(err)
-			return c.NoContent(http.StatusBadRequest)
-		}
-		if err := c.Validate(tag); err != nil {
-			e.Logger.Info(err)
-			return c.NoContent(http.StatusBadRequest)
-		}
-		return ParseSQLErrorToResponse(CreateRow(&tag), c)
-	})
-	e.DELETE("/api/tag", func(c echo.Context) error {
-		tag := TagDeleteRequest{}
-		if err := c.Bind(&tag); err != nil {
-			e.Logger.Info(err)
-			return c.NoContent(http.StatusBadRequest)
-		}
-		if err := c.Validate(tag); err != nil {
-			e.Logger.Info(err)
-			return c.NoContent(http.StatusBadRequest)
-		}
-		return ParseSQLErrorToResponse(DeleteRowByKeys(&Tag{}, &tag.UIDs), c)
-	})
+	e.GET("/api/tag", ReadHandler(Tag{}))
+	e.POST("/api/tag", CreateHandler(Tag{}))
+	e.DELETE("/api/tag", DeleteHandler(Tag{}))
 
 	//static resource
 	e.GET("/*", VueRouterStatic("static"))
