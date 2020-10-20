@@ -48,6 +48,7 @@ type (
 	}
 )
 
+// Tag model's CrudModel interface implementing
 func (Tag) InstancePointer() interface{} {
 	return &Tag{}
 }
@@ -62,4 +63,21 @@ func (Tag) DeleteInstancePointer() interface{} {
 
 func (Tag) DeleteKey(i interface{}) interface{} {
 	return i.(*TagDeleteRequest).UIDs
+}
+
+// Person model's CrudModel interface implementing
+func (Person) InstancePointer() interface{} {
+	return &Person{}
+}
+
+func (Person) SlicePointer() interface{} {
+	return &[]Person{}
+}
+
+func (Person) DeleteInstancePointer() interface{} {
+	return &PersonDeleteRequest{}
+}
+
+func (Person) DeleteKey(i interface{}) interface{} {
+	return i.(*PersonDeleteRequest).IDs
 }
