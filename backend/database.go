@@ -40,6 +40,11 @@ func DeleteRowByKeys(model interface{}, keys interface{}) error {
 	return currentDatabase.Delete(model, keys).Error
 }
 
+// UpdateRow updates row, row can be every type of pointer and updated row is decided by pk.
+func UpdateRow(row interface{}) error {
+	return currentDatabase.Save(row).Error
+}
+
 // Migrate is migrate database with all models
 func Migrate() {
 	currentDatabase.AutoMigrate(&Tag{}, &Person{})
