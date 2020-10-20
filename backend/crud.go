@@ -56,3 +56,18 @@ func DeleteHandler(model CrudModel) func(c echo.Context) error {
 		return ParseSQLErrorToResponse(DeleteRowByKeys(instance, keys), c)
 	}
 }
+
+func UpdateHandler(model CrudModel) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		instance := model.InstancePointer()
+		if err := c.Bind(instance); err != nil {
+			c.Logger().Info(err)
+			return c.NoContent(http.StatusBadRequest)
+		}
+		if err := c.Validate(instance); err != nil {
+			c.Logger().Info(err)
+			return c.NoContent(http.StatusBadRequest)
+		}
+		return ParseSQLErrorToResponse(UpdateRow(instance), c)
+	}
+}
