@@ -6,6 +6,7 @@
             :columns="columns"
             :rows="persons"
             :dialog="dialog"
+            ukey="id"
             @create="addPerson"
             @read="listPerson"
             @update="updatePerson"
@@ -22,6 +23,10 @@ import DataTable from '../components/DataTable.vue';
 
 export default {
     name: "Personnel",
+    components: {
+        Toast,
+        DataTable,
+    },
     data: () => ({
         columns: [
           { text: '군번', value: 'id'},
@@ -31,24 +36,25 @@ export default {
         persons: [],
         dialog: [
             [
-                {key: "id", label: "군번", required: true},
+                {key: "id", label: "군번", required: true, update_disable: true},
                 {key: "name", label: "이름", required: true},
             ],
             [
                 {key: "department", label: "부서", required: true},
             ]
         ],
-        msgs: {},
+        msgs: [],
     }),
-    method: {
-        addPerson: (dialogData) => {
+    methods: {
+        addPerson: function(dialogData) {
             axios.post("./api/person", dialogData)
                 .then(() => {
                     this.msgs.push({msg: "추가 성공!", kind: "success"});
                 })
                 .catch(this.handleError);
+            this.listPerson(300);
         },
-        listPerson: (delay) => {
+        listPerson: function(delay) {
             const req = () => {
                 axios.get("./api/person")
                     .then((res) => {
@@ -63,10 +69,15 @@ export default {
                 setTimeout(req, delay);
             }
         },
-        updatePerson: (dialogData) => {
-
+        updatePerson: function(dialogData) {
+             axios.put("./api/person", dialogData)
+                .then(() => {
+                    this.msgs.push({msg: "갱신 성공!", kind: "success"});
+                })
+                .catch(this.handleError);
+            this.listPerson(300);
         },
-        deletePerson: (selected) => {
+        deletePerson: function(selected) {
             const t = selected.map(x => x.id);
             if (t.length < 1) {
                 this.msgs.push({msg: "삭제할 병력를 지정하세요.", kind: "error"});
@@ -78,6 +89,7 @@ export default {
                     this.msgs.push({msg: "삭제 성공!", kind: "success"});
                 })
                 .catch(this.handleError);
+            this.listPerson(300);
         },
         handleError: function(error) {
             if (error.response) {
