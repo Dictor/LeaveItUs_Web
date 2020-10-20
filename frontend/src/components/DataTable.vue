@@ -8,7 +8,7 @@
             -->
             <v-btn key="btn-create" color="green" @click="actionCreate" dark large class="mr-1"><v-icon>mdi-plus</v-icon>{{title}} 추가</v-btn>
             <v-btn key="btn-delete" color="error" @click="actionDelete" large class="mr-1"><v-icon>mdi-delete</v-icon>{{title}} 삭제</v-btn>
-            <v-btn key="btn-update" color="orange" @click="actionUpdate" :disabled="selected.length===1" large class="mr-1"><v-icon>mdi-pencil</v-icon>{{title}} 변경</v-btn>
+            <v-btn key="btn-update" color="orange" @click="actionUpdate" :disabled="selected.length!==1" large class="mr-1"><v-icon>mdi-pencil</v-icon>{{title}} 변경</v-btn>
             <v-btn key="btn-read" color="blue"  @click="actionRead" large><v-icon>mdi-refresh</v-icon>새로고침</v-btn>
         </v-card>
         <v-card>
@@ -16,7 +16,7 @@
                 <v-text-field
                     v-model="search"
                     append-icon="mdi-magnify"
-                    :label="title + 검색"
+                    :label="title + ' 검색'"
                     single-line
                     hide-details
                 ></v-text-field>
@@ -26,7 +26,7 @@
                 :headers="columns"
                 :items="rows"
                 :search="search"
-                item-key="uid"
+                :item-key="ukey"
                 show-select
             ></v-data-table>
         </v-card>
@@ -40,7 +40,7 @@
                         <v-container>
                             <v-row v-for="(row, ri) in dialog" :key="ri">
                                 <v-col v-for="(col, ci) in row" :key="ci" :cols="24 / row.length" :sm="12 / row.length" :md="8 / row.length">
-                                    <v-text-field v-model="Dialog[col.key]" :label="col.label" :required="col.required" :disabled="DialogStatus==='update'"></v-text-field>
+                                    <v-text-field v-model="Dialog[col.key]" :label="col.label + (col.required ? '*':'')" :disabled="DialogStatus==='update' && col.update_disable"></v-text-field>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -59,11 +59,11 @@
 
 <script>
 /*
-properties : title, columns, rows, dialog
+properties : title, columns, rows, dialog, unique-key
 events: create, read, update, delete
 */
 export default {
-    props: ["title", "columns", "rows", "dialog"],
+    props: ["title", "columns", "rows", "dialog", "ukey"],
     data: () => ({
         search: "",
         selected: [],
@@ -71,28 +71,28 @@ export default {
         Dialog: {},
         DialogStatus: ""
     }),
-    method: {
-        applyDialog: () => {
+    methods: {
+        applyDialog: function() {
             if (this.DialogStatus == "create") {
                 this.$emit("create", this.Dialog);
             } else {
                 this.$emit("update", this.Dialog);
             }
         },
-        actionCreate: () => {
+        actionCreate: function() {
             this.Dialog = {};
             this.DialogStatus = "create";
             this.visibleDialog = true;
         },
-        actionUpdate: () => {
+        actionUpdate: function() {
             this.Dialog = this.selected[0];
             this.DialogStatus = "update";
             this.visibleDialog = true;
         },
-        actionDelete: () => {
+        actionDelete: function() {
             this.$emit("delete", this.selected);
         },
-        actionRead: () => {
+        actionRead: function() {
             this.$emit("read");
         },
     }
