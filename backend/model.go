@@ -47,3 +47,19 @@ type (
 		Persons []Person `json:"person" validate:"required"` // slice of persons belong in this room
 	}
 )
+
+func (Tag) InstancePointer() interface{} {
+	return &Tag{}
+}
+
+func (Tag) SlicePointer() interface{} {
+	return &[]Tag{}
+}
+
+func (Tag) DeleteInstancePointer() interface{} {
+	return &TagDeleteRequest{}
+}
+
+func (Tag) DeleteKey(i interface{}) interface{} {
+	return i.(*TagDeleteRequest).UIDs
+}
