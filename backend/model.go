@@ -38,13 +38,13 @@ type (
 		ID         string `json:"id" validate:"required,printascii" gorm:"primaryKey,unique"` // person id, it's used to tag's assignee id
 		Name       string `json:"name" validate:"required"`
 		Department string `json:"department" validate:"required"`
+		RoomID     string `json:"room_id" validate:"required,printascii"`
 	}
 
 	// Room is room data. One room has one locker.
 	Room struct {
-		ID      string   `json:"id" validate:"required,printascii" gorm:"primaryKey,unique"` // room id, it's used to locker's room id
-		Name    string   `json:"name" validate:"required"`
-		Persons []Person `json:"person" validate:"required"` // slice of persons belong in this room
+		ID   string `json:"id" validate:"required,printascii" gorm:"primaryKey,unique"` // room id, it's used to locker's room id
+		Name string `json:"name" validate:"required"`
 	}
 )
 
