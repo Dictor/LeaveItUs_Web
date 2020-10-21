@@ -1,6 +1,6 @@
 <template>
     <v-container class="pa-2 mb-2 toast-parent">
-        <v-container v-for="(msg, i) in msgs" :key="i" class="pa-0 ma-0">
+        <v-container fluid v-for="(msg, i) in msgs" :key="i" class="pa-0 ma-0">
             <v-alert :type="msg.kind ? msg.kind : 'info'" class="ma-1">
                 {{ !(msg.msg) ? msg: msg.msg }}
             </v-alert>
@@ -35,6 +35,9 @@ export default {
         
 <style scoped>
     .toast-parent {
+        max-width: 50%;
+        min-width: 300px;
+        z-index: 999;
         position: fixed;
         bottom: 0;
         right: 0;
