@@ -13,6 +13,7 @@ type (
 		ID         string `json:"id" validate:"required,printascii"`                           // tag's managing id
 		AssigneeID string `json:"assignee_id" validate:"required,printascii"`                  // id of person who assigned this tag (same with device owner)
 		DeviceID   string `json:"device_id" validate:"required,printascii"`                    // id of device which this tag is attached
+		LockerUID  string `json:"locker_uid" validate:"required,printascii"`
 		gorm.Model        // model for managing record's crud datetime
 	}
 
@@ -23,7 +24,7 @@ type (
 		Room       Room           `json:"room" validate:"required,printascii"`                         // id of room where locker exist in
 		Security   LockerSecurity `json:"-"`                                                           // security data
 		Status     LockerStatus   `json:"status" validate:"required"`                                  // locker's status
-		Tags       *[]Tag         `json:"tags" validate:"required"`                                    // Slice of tags which are stored in locker
+		Tags       []Tag          `json:"tags" validate:"required" gorm:"foreignkey:LockerUID"`        // Slice of tags which are stored in locker
 		gorm.Model                // model for managing record's crud datetime
 	}
 
@@ -62,8 +63,9 @@ type (
 
 	// Room is room data. One room has one locker.
 	Room struct {
-		ID   string `json:"id" validate:"required,printascii" gorm:"primaryKey,unique"` // room id, it's used to locker's room id
-		Name string `json:"name" validate:"required"`
+		ID      string `json:"id" validate:"required,printascii" gorm:"primaryKey,unique"` // room id, it's used to locker's room id
+		Name    string `json:"name" validate:"required"`
+		Persons Person `json:"persons" gorm:"foreignkey:RoomID"`
 	}
 )
 
