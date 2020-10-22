@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -19,7 +21,7 @@ type (
 		UID        string         `json:"uid" validate:"required,printascii" gorm:"primaryKey,unique"` // locker's unique id
 		ID         string         `json:"id" validate:"required,printascii"`                           // locker's managing id
 		Room       Room           `json:"room" validate:"required,printascii"`                         // id of room where locker exist in
-		Security   LockerSecurity `json:"security" validate:"required"`                                // security data
+		Security   LockerSecurity `json:"-"`                                                           // security data
 		Status     LockerStatus   `json:"status" validate:"required"`                                  // locker's status
 		Tags       *[]Tag         `json:"tags" validate:"required"`                                    // Slice of tags which are stored in locker
 		gorm.Model                // model for managing record's crud datetime
@@ -27,10 +29,27 @@ type (
 
 	// LockerSecurity is security data like credential, certificate for communicating
 	LockerSecurity struct {
+		Secret string
 	}
 
 	// LockerStatus is status information of locker
 	LockerStatus struct {
+		LastRecieveDate time.Time `json:"last_recieve_date"`
+	}
+
+	// LockerDoorEvent is definition of locker door closing event. Detail is in API doc.
+	LockerDoorEvent struct {
+		ClosedTime time.Time     `json:"close_time" validate:"numeric"`
+		Duration   time.Duration `json:"duration" validate:"numeric"`
+		gorm.Model               // model for managing record's crud datetime
+	}
+
+	// LockerPhoneRecord is log record from locker's storing information.  Detail is in API doc.
+	LockerPhoneRecord struct {
+		LockerUID  string    `json:"locker_id"`
+		TagUIDs    *[]string `json:"tag_uids"`
+		Weight     float32   `json:"weight"`
+		gorm.Model           // model for managing record's crud datetime
 	}
 
 	// Person is each human's data
