@@ -30,6 +30,11 @@ func ListTable(result interface{}) error {
 	return currentDatabase.Find(result).Error
 }
 
+// SelectTable return row on table which has given primary key. result is pointer of every type. pk is primary key value.
+func SelectTable(result interface{}, pk interface{}) error {
+	return currentDatabase.First(result, pk).Error
+}
+
 // DeleteRow deletes rows, row can be every type of pointer
 func DeleteRow(row interface{}) error {
 	return currentDatabase.Delete(row).Error
