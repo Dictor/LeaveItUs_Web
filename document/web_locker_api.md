@@ -95,7 +95,7 @@ hash = sha256(secure_key + http_body)
 |--|---|
 |timestamp|서버 시간을 기준으로한 Unix timestamp|
 |close_time|Tclose의 Unix timestamp입니다. 0을 보낼 시 서버는 요청 수신 시간으로 대체합니다.|
-|duration|밀리세컨드 단위의 Td 간격입니다.|
+|duration|밀리세컨드 단위의 Td 간격입니다. Td가 설정한 시간 이상이면 라커는 이를 감지하고 -1을 보냅니다. 서버에서는 이를 이상 행위로 판단합니다.|
 
 |응답 코드|응답 본문|설명|
 |--|---|---|
