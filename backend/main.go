@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	elogrus "github.com/dictor/echologrus"
 	"github.com/go-playground/validator/v10"
@@ -48,7 +49,10 @@ func main() {
 	e.GET("/*", VueRouterStatic("static"))
 
 	// Initialize database
-	SetDBHander(TestDBHander())
+	dbpath, _ := os.UserHomeDir()
+	dbpath += "/leaveitus.db"
+	Logger.Infof("db path: %s", dbpath)
+	SetDBHander(LocalSqliteHandler(dbpath))
 	Migrate()
 
 	// Start listening
