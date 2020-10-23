@@ -23,6 +23,12 @@ func AttachRoutes(e *echo.Echo) {
 	e.DELETE("/api/person", DeleteHandler(Person{}))
 	e.PUT("/api/person", UpdateHandler(Person{}))
 
+	// endpoint "locker" has CRUD actions
+	e.GET("/api/locker", ReadHandler(Locker{}))
+	e.POST("/api/locker", CreateHandler(Locker{}))
+	e.DELETE("/api/locker", DeleteHandler(Locker{}))
+	e.PUT("/api/locker", UpdateHandler(Locker{}))
+
 	// endpoint for locker hardware
 	e.GET("/api/timestamp", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]int64{"timestamp": time.Now().Unix()})
@@ -49,6 +55,7 @@ func readLockerTag(c echo.Context) error {
 	return c.JSON(http.StatusOK, locker.Tags)
 }
 
+/*
 func createLockerTagRecord(c echo.Context) error {
 
 }
@@ -56,3 +63,4 @@ func createLockerTagRecord(c echo.Context) error {
 func createLockerDoorEvent(c echo.Context) error {
 
 }
+*/
