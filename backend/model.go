@@ -22,9 +22,9 @@ type (
 		UID        string         `json:"uid" validate:"required,printascii" gorm:"primaryKey,unique"` // locker's unique id
 		ID         string         `json:"id" validate:"required,printascii"`                           // locker's managing id
 		RoomID     string         `json:"room_id" validate:"required,printascii"`                      // id of room where locker exist in
-		Security   LockerSecurity `json:"-"`                                                           // security data
-		Status     LockerStatus   `json:"status"`                                                      // locker's status
-		Tags       []Tag          `json:"tags" validate:"required" gorm:"foreignkey:LockerUID"`        // Slice of tags which are stored in locker
+		Security   LockerSecurity `json:"-" gorm:"embedded"`                                           // security data
+		Status     LockerStatus   `json:"status" gorm:"embedded"`                                      // locker's status
+		Tags       []Tag          `json:"tags" gorm:"foreignkey:LockerUID"`                            // Slice of tags which are stored in locker
 		gorm.Model                // model for managing record's crud datetime
 	}
 
