@@ -114,7 +114,10 @@ export default {
         mounted() { 
             this.listTag();
         }
-    } 
+    },
+    mounted() {
+        this.listTag();
+    }
 }
 </script>
 

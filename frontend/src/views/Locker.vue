@@ -108,6 +108,9 @@ export default {
                 this.msgs.push({msg: "요청 실패", kind: "error"});
             }
         },
+    },
+    mounted() {
+        this.listLocker();
     }
 }
 </script>
