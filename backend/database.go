@@ -52,5 +52,5 @@ func UpdateRow(row interface{}) error {
 
 // Migrate is migrate database with all models
 func Migrate() {
-	currentDatabase.AutoMigrate(&Tag{}, &Person{})
+	currentDatabase.AutoMigrate(&Tag{}, &Person{}, &Locker{})
 }
