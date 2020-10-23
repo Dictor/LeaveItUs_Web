@@ -24,7 +24,7 @@ func AttachRoutes(e *echo.Echo) {
 	e.PUT("/api/person", UpdateHandler(Person{}))
 
 	// endpoint "locker" has CRUD actions
-	e.GET("/api/locker", ReadHandler(Locker{}))
+	e.GET("/api/locker", ReadAssocHandler(Locker{}, []string{"Tags"}))
 	e.POST("/api/locker", CreateHandler(Locker{}))
 	e.DELETE("/api/locker", DeleteHandler(Locker{}))
 	e.PUT("/api/locker", UpdateHandler(Locker{}))
