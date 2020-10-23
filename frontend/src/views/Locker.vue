@@ -42,7 +42,7 @@ export default {
             ],
             [
                 {key: "room_id", label: "생활관 ID", required: true},
-                {key: "tags", label: "할당된 태그", required: true},,
+                {key: "tags", label: "할당된 태그", required: true},
             ]
         ],
         msgs: [],
@@ -60,7 +60,7 @@ export default {
             const req = () => {
                 axios.get("./api/locker")
                     .then((res) => {
-                        this.persons = res.data;
+                        this.lockers = res.data;
                         this.msgs.push({msg: "불러오기 성공!", kind: "success"});
                     })
                     .catch(this.handleError);

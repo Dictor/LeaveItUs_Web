@@ -1,124 +1,63 @@
 <template>
     <v-container fluid>
         <toast :msgs="msgs"/>
-        <v-card class="pa-2 mb-2">
-            <v-btn key="" color="green" v-on:click="showAddDialog" dark large class="mr-1"><v-icon>mdi-plus</v-icon>태그 추가</v-btn>
-            <v-btn key="" color="error" v-on:click="deleteTag(); listTag(300);" large class="mr-1"><v-icon>mdi-delete</v-icon>태그 삭제</v-btn>
-            <v-btn key="" color="blue"  v-on:click="listTag" large><v-icon>mdi-refresh</v-icon>새로고침</v-btn>
-        </v-card>
-        <v-card>
-            <v-card-title>
-                <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="태그 검색"
-                    single-line
-                    hide-details
-                ></v-text-field>
-            </v-card-title>
-            <v-data-table
-                v-model="selected"
-                :headers="headers"
-                :items="tags"
-                :search="search"
-                item-key="uid"
-                show-select
-            ></v-data-table>
-        </v-card>
-        <v-row justify="center">
-            <v-dialog v-model="visibleAddDialog" persistent max-width="600px">
-                <v-card>
-                    <v-card-title>
-                        <span class="headline">태그 추가</span>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-container>
-                            <v-row>
-                                <v-col cols="12" sm="6" md="4">
-                                    <v-text-field v-model="addDialog.uid" label="태그 고유 ID" required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="4">
-                                    <v-text-field v-model="addDialog.id" label="태그 관리 ID" required></v-text-field>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col cols="12" sm="6" md="4">
-                                    <v-text-field v-model="addDialog.assignee_id" label="태그 사용자 ID" required></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="6" md="4">
-                                    <v-text-field v-model="addDialog.device_id" label="태그 장치 ID" required></v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                        <small>*indicates required field</small>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="closeAddDialog">취소</v-btn>
-                        <v-btn color="blue darken-1" text @click="addTag(); closeAddDialog(); listTag();">추가</v-btn>
-                    </v-card-actions>
-                </v-card>
-        </v-dialog>
-    </v-row>
+        <data-table
+            title="태그"
+            :columns="columns"
+            :rows="tags"
+            :dialog="dialog"
+            ukey="uid"
+            @create="addTag"
+            @read="listTag"
+            @update="updateTag"
+            @delete="deleteTag"
+        >
+        </data-table>
     </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import Toast from '../components/Toast.vue';
+import DataTable from '../components/DataTable.vue';
 
 export default {
     name: "Tag",
     data: () => ({
         search: '',
-        headers: [
+        columns: [
           { text: '고유 ID', value: 'uid' },
           { text: '관리 ID', value: 'id' },
           { text: '사용자 ID', value: 'assignee_id' },
           { text: '장치 ID', value: 'device_id' },
+          { text: '라커 ID', value: 'locker_uid' },
         ],
         tags: [],
-        selected: [],
-        visibleAddDialog: false,
-        addDialog: {},
+        dialog: [
+            [
+                {key: "uid", label: "고유 ID", required: true, update_disable: true},
+                {key: "id", label: "관리 ID", required: true},
+            ],
+            [
+                {key: "assignee_id", label: "사용자 ID", required: true},
+                {key: "device_id", label: "장치 ID", required: true},
+                {key: "locker_uid", label: "라커 ID", required: true},
+            ]
+        ],
         msgs: [],
       }),
     components: {
         Toast,
+        DataTable,
     },
     methods: {
-        showAddDialog: function() {
-            this.addDialog = {
-                uid: "",
-                id: "",
-                assignee_id: "",
-                device_id: ""
-            };
-            this.visibleAddDialog = true;
-        },
-        closeAddDialog: function() {
-            this.visibleAddDialog = false;
-        },
-        addTag: function() {
-            axios.post("./api/tag", this.addDialog)
+        addTag: function(dialogData) {
+            axios.post("./api/tag", dialogData)
                 .then(() => {
                     this.msgs.push({msg: "추가 성공!", kind: "success"});
                 })
                 .catch(this.handleError);
-        },
-        deleteTag: function() {
-            const t = this.selected.map(x => x.uid);
-            this.selected = [];
-            if (t.length < 1) {
-                this.msgs.push({msg: "삭제할 태그를 지정하세요.", kind: "error"});
-                return;
-            }
-            //in axios 0.20, axios.delete not working with data option
-            axios.request({data: {uids: t}, url: "./api/tag", method: 'delete'})
-                .then(() => {
-                    this.msgs.push({msg: "삭제 성공!", kind: "success"});
-                })
-                .catch(this.handleError);
+            this.listTag(300);
         },
         listTag: function(delay) {
             const req = () => {
@@ -134,6 +73,28 @@ export default {
             } else {
                 setTimeout(req, delay);
             }
+        },
+        updateTag: function(dialogData) {
+             axios.put("./api/tag", dialogData)
+                .then(() => {
+                    this.msgs.push({msg: "갱신 성공!", kind: "success"});
+                })
+                .catch(this.handleError);
+            this.listTag(300);
+        },
+        deleteTag: function(selected) {
+            const t = selected.map(x => x.id);
+            if (t.length < 1) {
+                this.msgs.push({msg: "삭제할 태그를 지정하세요.", kind: "error"});
+                return;
+            }
+            //in axios 0.20, axios.delete not working with data option
+            axios.request({data: {id: t}, url: "./api/tag", method: 'delete'})
+                .then(() => {
+                    this.msgs.push({msg: "삭제 성공!", kind: "success"});
+                })
+                .catch(this.handleError);
+            this.listTag(300);
         },
         handleError: function(error) {
             if (error.response) {
