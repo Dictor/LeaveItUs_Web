@@ -15,6 +15,11 @@ func TestDBHander() *gorm.DB {
 	return db
 }
 
+func LocalSqliteHandler(path string) *gorm.DB {
+	db, _ := gorm.Open(sqlite.Open(path), &gorm.Config{})
+	return db
+}
+
 // SetDBHander set internal current dabatase singleton instance
 func SetDBHander(h *gorm.DB) {
 	currentDatabase = h
@@ -28,6 +33,14 @@ func CreateRow(row interface{}) error {
 // ListTable return all rows on table, table is decided by result parameter's reflect. And returing data is contained to it and it musb be every type of pointer.
 func ListTable(result interface{}) error {
 	return currentDatabase.Find(result).Error
+}
+
+func ListPreloadTable(result interface{}, assoc []string) error {
+	tx := currentDatabase
+	for _, a := range assoc {
+		tx = tx.Preload(a)
+	}
+	return tx.Find(result).Error
 }
 
 // SelectTable return row on table which has given primary key. result is pointer of every type. pk is primary key value.
