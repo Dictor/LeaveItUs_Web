@@ -23,7 +23,7 @@ type (
 		ID         string         `json:"id" validate:"required,printascii"`                           // locker's managing id
 		RoomID     string         `json:"room_id" validate:"required,printascii"`                      // id of room where locker exist in
 		Security   LockerSecurity `json:"-"`                                                           // security data
-		Status     LockerStatus   `json:"status"`                                  // locker's status
+		Status     LockerStatus   `json:"status"`                                                      // locker's status
 		Tags       []Tag          `json:"tags" validate:"required" gorm:"foreignkey:LockerUID"`        // Slice of tags which are stored in locker
 		gorm.Model                // model for managing record's crud datetime
 	}
@@ -101,4 +101,21 @@ func (Person) DeleteInstancePointer() interface{} {
 
 func (Person) DeleteKey(i interface{}) interface{} {
 	return i.(*PersonDeleteRequest).IDs
+}
+
+// Locker model's CrudModel interface implementing
+func (Locker) InstancePointer() interface{} {
+	return &Locker{}
+}
+
+func (Locker) SlicePointer() interface{} {
+	return &[]Locker{}
+}
+
+func (Locker) DeleteInstancePointer() interface{} {
+	return &LockerDeleteRequest{}
+}
+
+func (Locker) DeleteKey(i interface{}) interface{} {
+	return i.(*LockerDeleteRequest).UIDs
 }
