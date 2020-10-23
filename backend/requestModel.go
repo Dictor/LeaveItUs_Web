@@ -10,4 +10,9 @@ type (
 	PersonDeleteRequest struct {
 		IDs []string `json:"ids" validate:"required,printascii"`
 	}
+
+	// LockerDeleteRequest is definition of DELETE locker request's body
+	LockerDeleteRequest struct {
+		UIDs []string `json:"uids" validate:"required,printascii"`
+	}
 )
