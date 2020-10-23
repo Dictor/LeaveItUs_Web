@@ -33,6 +33,7 @@ func AttachRoutes(e *echo.Echo) {
 	e.GET("/api/timestamp", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]int64{"timestamp": time.Now().Unix()})
 	})
+	e.GET("/api/locker/:uid/phone", readLockerTag)
 }
 
 func readLockerTag(c echo.Context) error {
