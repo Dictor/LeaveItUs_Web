@@ -32,6 +32,7 @@ export default {
           { text: '군번', value: 'id'},
           { text: '이름', value: 'name'},
           { text: '부서', value: 'department'},
+          { text: '생활관 ID', value: 'room_id'},
         ],
         persons: [],
         dialog: [
@@ -41,6 +42,7 @@ export default {
             ],
             [
                 {key: "department", label: "부서", required: true},
+                {key: "room_id", label: "생활관 ID", required: true},,
             ]
         ],
         msgs: [],
