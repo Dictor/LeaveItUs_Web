@@ -34,6 +34,17 @@ func ReadHandler(model CrudModel) func(c echo.Context) error {
 	}
 }
 
+func ReadAssocHandler(model CrudModel, assoc []string) func(c echo.Context) error {
+	return func(c echo.Context) error {
+		slice := model.SlicePointer()
+		c.Logger().Debug(reflect.TypeOf(slice).String())
+		if ListPreloadTable(slice, assoc) != nil {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+		return c.JSON(http.StatusOK, slice)
+	}
+}
+
 func CreateHandler(model CrudModel) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		instance := model.InstancePointer()
