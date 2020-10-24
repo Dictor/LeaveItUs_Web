@@ -33,7 +33,9 @@ func AttachRoutes(e *echo.Echo) {
 	e.GET("/api/timestamp", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]int64{"timestamp": time.Now().Unix()})
 	})
-	e.GET("/api/locker/:uid/phone", readLockerTag)
+	e.GET("/api/locker/:uid/tag", readLockerTag)
+	e.POST("/api/locker/:uid/tag", createLockerTagRecord)
+	e.POST("/api/locker/:uid/door", createLockerDoorEvent)
 }
 
 func readLockerTag(c echo.Context) error {
@@ -56,12 +58,54 @@ func readLockerTag(c echo.Context) error {
 	return c.JSON(http.StatusOK, locker.Tags)
 }
 
-/*
 func createLockerTagRecord(c echo.Context) error {
+	uid := c.Param("uid")
+	v := validator.New()
+	if err := v.Var(uid, "required,printascii"); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
 
+	req := LockerRecordCreateRequest{}
+	if err := c.Bind(&req); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+	if err := c.Validate(&req); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	row := LockerRecord{
+		TagUIDs:   req.TagUIDs,
+		Weight:    req.Weight,
+		LockerUID: uid,
+	}
+	return ParseSQLErrorToResponse(CreateRow(row), c)
 }
 
 func createLockerDoorEvent(c echo.Context) error {
+	uid := c.Param("uid")
+	v := validator.New()
+	if err := v.Var(uid, "required,printascii"); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
 
+	req := LockerDoorEventCreateRequest{}
+	if err := c.Bind(&req); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+	if err := c.Validate(&req); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	row := LockerDoorEvent{
+		ClosedTime: req.ClosedTime,
+		Duration:   req.Duration,
+		LockerUID:  uid,
+	}
+	return ParseSQLErrorToResponse(CreateRow(row), c)
 }
-*/
