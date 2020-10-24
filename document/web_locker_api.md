@@ -64,7 +64,7 @@ hash = sha256(secure_key + http_body)
 |요구 본문 요소|요소 내용|
 |--|---|
 |timestamp|서버 시간을 기준으로한 Unix timestamp|
-|tags|반납된 휴대폰의 태그 UID 문자열의 배열입니다.|
+|tag_uids|반납된 휴대폰의 태그 UID 문자열의 배열입니다.|
 |weight|반납된 휴대폰의 무게 총합입니다. 그램 단위의 부동소수점입니다.|
 
 |응답 코드|응답 본문|설명|
