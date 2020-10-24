@@ -1,11 +1,6 @@
 <template>
     <v-container fluid>
         <v-card class="pa-2 mb-2">
-            <!--
-            <v-btn v-for="(button, i) in buttons" :key="i" @click="button.onclick" :color="button.color" large dark class="mr-1">
-                <v-icon>{{button.icon}}</v-icon>
-            </v-btn>
-            -->
             <v-btn key="btn-create" color="green" @click="actionCreate" dark large class="mr-1"><v-icon>mdi-plus</v-icon>{{title}} 추가</v-btn>
             <v-btn key="btn-delete" color="error" @click="actionDelete" large class="mr-1"><v-icon>mdi-delete</v-icon>{{title}} 삭제</v-btn>
             <v-btn key="btn-update" color="orange" @click="actionUpdate" :disabled="selected.length!==1" large class="mr-1"><v-icon>mdi-pencil</v-icon>{{title}} 변경</v-btn>
@@ -28,7 +23,13 @@
                 :search="search"
                 :item-key="ukey"
                 show-select
-            ></v-data-table>
+            >
+                <template v-if="slot" v-slot:[slot.name]="props">
+                    <component v-for="(c, i) in props[slot.item_id]" :key="i" :is="slot.type">
+                        {{ slot.item_renderer(c) }}
+                    </component>
+                </template>
+            </v-data-table>
         </v-card>
         <v-row justify="center">
             <v-dialog v-model="visibleDialog" persistent max-width="600px">
@@ -63,7 +64,7 @@ properties : title, columns, rows, dialog, unique-key
 events: create, read, update, delete
 */
 export default {
-    props: ["title", "columns", "rows", "dialog", "ukey"],
+    props: ["title", "columns", "rows", "dialog", "ukey", "slot"],
     data: () => ({
         search: "",
         selected: [],
@@ -72,6 +73,9 @@ export default {
         DialogStatus: ""
     }),
     methods: {
+        log: function(a) {
+            console.log(a);
+        },
         applyDialog: function() {
             if (this.DialogStatus == "create") {
                 this.$emit("create", this.Dialog);
