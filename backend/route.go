@@ -45,7 +45,7 @@ func readLockerTag(c echo.Context) error {
 	}
 
 	locker := Locker{}
-	if err := SelectTable(&locker, uid); err != nil {
+	if err := SelectPreloadTable(&locker, []string{"Tags"}, "UID = ?", uid); err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return c.NoContent(http.StatusNotFound)
 		} else {
