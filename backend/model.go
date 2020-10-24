@@ -40,14 +40,15 @@ type (
 
 	// LockerDoorEvent is definition of locker door closing event. Detail is in API doc.
 	LockerDoorEvent struct {
-		ClosedTime time.Time     `json:"close_time" validate:"numeric"`
-		Duration   time.Duration `json:"duration" validate:"numeric"`
-		gorm.Model               // model for managing record's crud datetime
+		LockerUID  string `json:"locker_id" validate:"required,printascii"`
+		ClosedTime int    `json:"close_time" validate:"numeric"`
+		Duration   int    `json:"duration" validate:"numeric"`
+		gorm.Model        // model for managing record's crud datetime
 	}
 
-	// LockerPhoneRecord is log record from locker's storing information.  Detail is in API doc.
-	LockerPhoneRecord struct {
-		LockerUID  string    `json:"locker_id"`
+	// LockerRecord is log record from locker's storing information.  Detail is in API doc.
+	LockerRecord struct {
+		LockerUID  string    `json:"locker_id" validate:"required,printascii"`
 		TagUIDs    *[]string `json:"tag_uids"`
 		Weight     float32   `json:"weight"`
 		gorm.Model           // model for managing record's crud datetime
