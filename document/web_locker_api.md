@@ -35,8 +35,8 @@ hash = sha256(secure_key + http_body)
 |200|없음|정상|
 
 ### 라커 정보
-#### GET /api/locker/{라커 UID}/phone
-라커에 할당된 휴대폰 목록을 얻습니다.
+#### GET /api/locker/{라커 UID}/tag
+라커에 할당된 태그 목록을 얻습니다.
 
 |요구 헤더 이름|헤더 내용|
 |--|---|
@@ -54,8 +54,8 @@ hash = sha256(secure_key + http_body)
 |500|없음|서버 내부 오류|
 
 ### 반납 정보
-#### POST /api/locker/{라커 UID}/phone
-라커에 반납된 휴대폰 목록을 보냅니다.
+#### POST /api/locker/{라커 UID}/tag
+라커에 반납된 태그 목록을 서버로 보냅니다.
 
 |요구 헤더 이름|헤더 내용|
 |--|---|
