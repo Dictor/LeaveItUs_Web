@@ -6,6 +6,7 @@
             :columns="columns"
             :rows="lockers"
             :dialog="dialog"
+            :slot="slot"
             ukey="id"
             @create="addLocker"
             @read="listLocker"
@@ -46,6 +47,7 @@ export default {
             ]
         ],
         msgs: [],
+        slot: {name: "item.tags", type: "v-chip", item_id: "value", item_renderer: x => x.uid},
     }),
     methods: {
         addLocker: function(dialogData) {
@@ -59,7 +61,18 @@ export default {
         listLocker: function(delay) {
             const req = () => {
                 axios.get("./api/locker")
-                    .then((res) => {
+                    .then((res) => {      
+                        /*
+                        for (let i = 0; i < res.data.length; i++) {
+                            let uids = res.data[i].tags.map(t => t.uid);
+                            let r = "";
+                            for (const u of uids) {
+                                r += "<v-chip>" + u + "</v-chip>";
+                            }
+                            res.data[i].tags = r;
+                        }
+                        */
+                        console.log(res.data);
                         this.lockers = res.data;
                         this.msgs.push({msg: "불러오기 성공!", kind: "success"});
                     })
@@ -94,6 +107,7 @@ export default {
             this.listLocker(300);
         },
         handleError: function(error) {
+            console.log(error);
             if (error.response) {
                 if (error.response.data.msg) {
                     this.msgs.push({msg: "서버의 실패 응답 : " + error.response.data.msg + "(" + error.response.status + ")", kind: "error"});
