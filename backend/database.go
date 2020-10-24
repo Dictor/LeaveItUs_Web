@@ -35,17 +35,29 @@ func ListTable(result interface{}) error {
 	return currentDatabase.Find(result).Error
 }
 
-func ListPreloadTable(result interface{}, assoc []string) error {
+// Preload make transaction instance which preload given association data.
+func Preload(assoc []string) *gorm.DB {
 	tx := currentDatabase
 	for _, a := range assoc {
 		tx = tx.Preload(a)
 	}
-	return tx.Find(result).Error
+	return tx
+}
+
+// ListPreloadTable return all rows on table and fill association data with given assoc param. result is every type of pointer.
+func ListPreloadTable(result interface{}, assoc []string) error {
+	return Preload(assoc).Find(result).Error
 }
 
 // SelectTable return row on table which has given primary key. result is pointer of every type. pk is primary key value.
-func SelectTable(result interface{}, pk interface{}) error {
-	return currentDatabase.First(result, pk).Error
+func SelectTable(result interface{}, param ...interface{}) error {
+	return currentDatabase.Find(result, param...).Error
+}
+
+// SelectPreloadTable select rows on table from given condition param and fill association data with given assoc param.
+// result is every type of pointer. param[0] is string sql condition and param[1:] is every type of value
+func SelectPreloadTable(result interface{}, assoc []string, param ...interface{}) error {
+	return Preload(assoc).Find(result, param...).Error
 }
 
 // DeleteRow deletes rows, row can be every type of pointer
