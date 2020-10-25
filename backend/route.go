@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"time"
@@ -28,6 +29,9 @@ func AttachRoutes(e *echo.Echo) {
 	e.POST("/api/locker", CreateHandler(Locker{}))
 	e.DELETE("/api/locker", DeleteHandler(Locker{}))
 	e.PUT("/api/locker", UpdateHandler(Locker{}))
+
+	e.GET("/api/locker/door", ReadHandler(LockerDoorEvent{}))
+	e.GET("/api/locker/tag", ReadHandler(LockerRecord{}))
 
 	// endpoint for locker hardware
 	e.GET("/api/timestamp", func(c echo.Context) error {
@@ -76,12 +80,18 @@ func createLockerTagRecord(c echo.Context) error {
 		return c.NoContent(http.StatusBadRequest)
 	}
 
+	uidser, err := json.Marshal(req.TagUIDs)
+	if err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
 	row := LockerRecord{
-		TagUIDs:   req.TagUIDs,
+		TagUIDs:   string(uidser),
 		Weight:    req.Weight,
 		LockerUID: uid,
 	}
-	return ParseSQLErrorToResponse(CreateRow(row), c)
+	return ParseSQLErrorToResponse(CreateRow(&row), c)
 }
 
 func createLockerDoorEvent(c echo.Context) error {
