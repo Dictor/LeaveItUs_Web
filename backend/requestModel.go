@@ -18,8 +18,8 @@ type (
 
 	// LockerRecordCreateRequest is definition of POST locker recored request's body
 	LockerRecordCreateRequest struct {
-		TagUIDs *[]string `json:"tag_uids" validate:"required"`
-		Weight  float32   `json:"weight" validate:"required,numeric"`
+		TagUIDs []string `json:"tag_uids" validate:"required"`
+		Weight  float32  `json:"weight" validate:"required,numeric"`
 	}
 
 	// LockerDoorEventCreateRequest is definition of POST locker door event request's body
