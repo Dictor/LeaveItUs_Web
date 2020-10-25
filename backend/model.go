@@ -40,7 +40,7 @@ type (
 
 	// LockerDoorEvent is definition of locker door closing event. Detail is in API doc.
 	LockerDoorEvent struct {
-		LockerUID  string `json:"locker_id" validate:"required,printascii"`
+		LockerUID  string `json:"locker_uid" validate:"required,printascii"`
 		ClosedTime int    `json:"close_time" validate:"numeric"`
 		Duration   int    `json:"duration" validate:"numeric"`
 		gorm.Model        // model for managing record's crud datetime
@@ -48,10 +48,10 @@ type (
 
 	// LockerRecord is log record from locker's storing information.  Detail is in API doc.
 	LockerRecord struct {
-		LockerUID  string    `json:"locker_id" validate:"required,printascii"`
-		TagUIDs    *[]string `json:"tag_uids"`
-		Weight     float32   `json:"weight"`
-		gorm.Model           // model for managing record's crud datetime
+		LockerUID  string  `json:"locker_uid" validate:"required,printascii"`
+		TagUIDs    string  `json:"tag_uids"`
+		Weight     float32 `json:"weight"`
+		gorm.Model         // model for managing record's crud datetime
 	}
 
 	// Person is each human's data
@@ -119,4 +119,38 @@ func (Locker) DeleteInstancePointer() interface{} {
 
 func (Locker) DeleteKey(i interface{}) interface{} {
 	return i.(*LockerDeleteRequest).UIDs
+}
+
+// LockerRecord model's CrudModel interface implementing. This model need only create, read action.
+func (LockerRecord) InstancePointer() interface{} {
+	return &LockerRecord{}
+}
+
+func (LockerRecord) SlicePointer() interface{} {
+	return &[]LockerRecord{}
+}
+
+func (LockerRecord) DeleteInstancePointer() interface{} {
+	return nil
+}
+
+func (LockerRecord) DeleteKey(i interface{}) interface{} {
+	return nil
+}
+
+// LockerDoorEvent model's CrudModel interface implementing. This model need only create, read action.
+func (LockerDoorEvent) InstancePointer() interface{} {
+	return &LockerDoorEvent{}
+}
+
+func (LockerDoorEvent) SlicePointer() interface{} {
+	return &[]LockerDoorEvent{}
+}
+
+func (LockerDoorEvent) DeleteInstancePointer() interface{} {
+	return nil
+}
+
+func (LockerDoorEvent) DeleteKey(i interface{}) interface{} {
+	return nil
 }
