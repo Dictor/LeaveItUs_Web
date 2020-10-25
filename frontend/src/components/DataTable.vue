@@ -1,10 +1,10 @@
 <template>
     <v-container fluid>
         <v-card class="pa-2 mb-2">
-            <v-btn key="btn-create" color="green" @click="actionCreate" dark large class="mr-1"><v-icon>mdi-plus</v-icon>{{title}} 추가</v-btn>
-            <v-btn key="btn-delete" color="error" @click="actionDelete" large class="mr-1"><v-icon>mdi-delete</v-icon>{{title}} 삭제</v-btn>
-            <v-btn key="btn-update" color="orange" @click="actionUpdate" :disabled="selected.length!==1" large class="mr-1"><v-icon>mdi-pencil</v-icon>{{title}} 변경</v-btn>
-            <v-btn key="btn-read" color="blue"  @click="actionRead" large><v-icon>mdi-refresh</v-icon>새로고침</v-btn>
+            <v-btn key="btn-create" color="green" @click="actionCreate" v-if="!isDisabled('c')" dark large class="mr-1"><v-icon>mdi-plus</v-icon>{{title}} 추가</v-btn>
+            <v-btn key="btn-delete" color="error" @click="actionDelete" v-if="!isDisabled('d')" large class="mr-1"><v-icon>mdi-delete</v-icon>{{title}} 삭제</v-btn>
+            <v-btn key="btn-update" color="orange" @click="actionUpdate"  v-if="!isDisabled('u')" :disabled="selected.length!==1" large class="mr-1"><v-icon>mdi-pencil</v-icon>{{title}} 변경</v-btn>
+            <v-btn key="btn-read" color="blue"  @click="actionRead"  v-if="!isDisabled('r')" large><v-icon>mdi-refresh</v-icon>새로고침</v-btn>
         </v-card>
         <v-card>
             <v-card-title>
@@ -22,7 +22,7 @@
                 :items="rows"
                 :search="search"
                 :item-key="ukey"
-                show-select
+                :show-select="ukey"
             >
                 <template v-if="slot" v-slot:[slot.name]="props">
                     <component v-for="(c, i) in props[slot.item_id]" :key="i" :is="slot.type">
@@ -64,7 +64,7 @@ properties : title, columns, rows, dialog, unique-key
 events: create, read, update, delete
 */
 export default {
-    props: ["title", "columns", "rows", "dialog", "ukey", "slot"],
+    props: ["title", "columns", "rows", "dialog", "ukey", "slot", "disable_action"],
     data: () => ({
         search: "",
         selected: [],
@@ -73,8 +73,9 @@ export default {
         DialogStatus: ""
     }),
     methods: {
-        log: function(a) {
-            console.log(a);
+        isDisabled: function(this_action) {
+            if (!this.disable_action) return false;
+            return this.disable_action.includes(this_action);
         },
         applyDialog: function() {
             if (this.DialogStatus == "create") {
