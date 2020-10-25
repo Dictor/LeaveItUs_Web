@@ -12,7 +12,6 @@ func VueRouterStatic(root string) func(c echo.Context) error {
 	return func(c echo.Context) error {
 		u := c.Request().URL
 		path := filepath.Clean(u.EscapedPath())
-		c.Logger().Debugf("inspect: %s > %s\n", u, path)
 		var servePath string
 
 		if fileExists(root + path) {
@@ -20,7 +19,7 @@ func VueRouterStatic(root string) func(c echo.Context) error {
 		} else {
 			servePath = root + "/index.html"
 		}
-		c.Logger().Debug(servePath)
+		c.Logger().Debugf("Serving static resource. request=%s cleaned_path=%s file_path=%s", u, path, servePath)
 		return c.File(servePath)
 	}
 }
