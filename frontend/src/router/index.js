@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Brief from '../views/Brief.vue'
 import Tag from '../views/Tag.vue'
 import Locker from '../views/Locker.vue'
-import Log from '../views/Log.vue'
+import DoorEvent from '../views/DoorEvent.vue'
+import TagRecord from '../views/TagRecord.vue'
 import Personnel from '../views/Personnel.vue'
 Vue.use(VueRouter)
 
@@ -29,9 +30,14 @@ const routes = [
     component: Personnel
   },
   {
-    path: '/log',
-    name: 'Log',
-    component: Log
+    path: '/tag-record',
+    name: 'TagRecord',
+    component: TagRecord
+  },
+  {
+    path: '/door-event',
+    name: 'DoorEvent',
+    component: DoorEvent
   },
 ]
 
