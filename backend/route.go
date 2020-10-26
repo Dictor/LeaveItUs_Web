@@ -37,12 +37,33 @@ func AttachRoutes(e *echo.Echo) {
 	e.GET("/api/timestamp", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]int64{"timestamp": time.Now().Unix()})
 	})
-	e.GET("/api/locker/:uid/tag", readLockerTag)
+	e.GET("/api/locker/:uid/tag", readAllLockerTag)
+	e.GET("/api/locker/:uid/door", readLockerDoorEvent)
 	e.POST("/api/locker/:uid/tag", createLockerTagRecord)
 	e.POST("/api/locker/:uid/door", createLockerDoorEvent)
 }
 
-func readLockerTag(c echo.Context) error {
+func readAllLockerTag(c echo.Context) error {
+	if c.Param("uid") != "latest" {
+		return readLockerTagRecord(c)
+	}
+
+	lockers := []Locker{}
+	if err := ListTable(&lockers); err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+
+	tx := GetDatabase()
+	lrs := map[string]*LockerRecord{}
+	for _, l := range lockers {
+		lr := LockerRecord{}
+		tx.Where("locker_uid = ?", l.UID).Order("created_at desc").Limit(1).Find(&lr)
+		lrs[l.UID] = &lr
+	}
+	return c.JSON(http.StatusOK, lrs)
+}
+
+func readLockerTagRecord(c echo.Context) error {
 	uid := c.Param("uid")
 	v := validator.New()
 	if err := v.Var(uid, "required,printascii"); err != nil {
@@ -60,6 +81,26 @@ func readLockerTag(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, locker.Tags)
+}
+
+func readLockerDoorEvent(c echo.Context) error {
+	uid := c.Param("uid")
+	v := validator.New()
+	if err := v.Var(uid, "required,printascii"); err != nil {
+		c.Logger().Info(err)
+		return c.NoContent(http.StatusBadRequest)
+	}
+
+	de := []LockerDoorEvent{}
+	if err := SelectTable(&de, "locker_uid = ?", uid); err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return c.NoContent(http.StatusNotFound)
+		} else {
+			return c.NoContent(http.StatusInternalServerError)
+		}
+	}
+
+	return c.JSON(http.StatusOK, de)
 }
 
 func createLockerTagRecord(c echo.Context) error {
