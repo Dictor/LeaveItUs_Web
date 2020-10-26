@@ -79,3 +79,7 @@ func UpdateRow(row interface{}) error {
 func Migrate() {
 	currentDatabase.AutoMigrate(&Tag{}, &Person{}, &Locker{}, &LockerRecord{}, &LockerDoorEvent{})
 }
+
+func GetDatabase() *gorm.DB {
+	return currentDatabase
+}
