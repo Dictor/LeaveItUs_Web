@@ -6,6 +6,7 @@ import Locker from '../views/Locker.vue'
 import DoorEvent from '../views/DoorEvent.vue'
 import TagRecord from '../views/TagRecord.vue'
 import Personnel from '../views/Personnel.vue'
+import Status from '../views/Status.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path: '/door-event',
     name: 'DoorEvent',
     component: DoorEvent
+  },
+  {
+    path: '/status',
+    name: 'Status',
+    component: Status
   },
 ]
 

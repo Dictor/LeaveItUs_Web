@@ -29,10 +29,10 @@
         data () {
             return {
                 items: [
-                    { title: '현재 상태', icon: 'mdi-chart-box', link: "now"},
+                    { title: '현재 상태', icon: 'mdi-information', link: "status"},
                     
-                    { title: '휴대폰 반납 기록 관리', icon: 'mdi-cellphone-arrow-down', link: "tag-record"},
-                    { title: '개폐 기록 관리', icon: 'mdi-door-open', link: "door-event"},
+                    { title: '휴대폰 반납 기록 열람', icon: 'mdi-cellphone-arrow-down', link: "tag-record"},
+                    { title: '개폐 기록 열람', icon: 'mdi-door-open', link: "door-event"},
 
                     { title: '태그(필증) 관리', icon: 'mdi-bookmark-multiple-outline', link: "tag"},
                     { title: '보관함 관리', icon: 'mdi-briefcase', link: "locker"},
