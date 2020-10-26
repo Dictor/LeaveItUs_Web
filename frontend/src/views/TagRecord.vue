@@ -6,6 +6,7 @@
             :columns="columns"
             :rows="records"
             :dialog="dialog"
+            :slot="slot"
             disable_action="cud"
             @read="listRecord"
         >
@@ -33,6 +34,7 @@ export default {
         records: [],
         dialog: [],
         msgs: [],
+        slot: {name: "item.tag_uids", type: "v-chip", item_id: "value", item_renderer: x => x},
     }),
     methods: {
         listRecord: function(delay) {
@@ -41,6 +43,9 @@ export default {
                     .then((res) => {      
                         console.log(res.data);
                         this.records = res.data;
+                        for (let r of this.records) {
+                            r.tag_uids = JSON.parse(r.tag_uids);
+                        }
                         this.msgs.push({msg: "불러오기 성공!", kind: "success"});
                     })
                     .catch(this.handleError);
