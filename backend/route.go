@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -30,7 +31,7 @@ func AttachRoutes(e *echo.Echo) {
 	e.DELETE("/api/locker", DeleteHandler(Locker{}))
 	e.PUT("/api/locker", UpdateHandler(Locker{}))
 
-	e.GET("/api/locker/door", ReadHandler(LockerDoorEvent{}))
+	e.GET("/api/locker/door", readDoorEventWithLimit)
 	e.GET("/api/locker/tag", ReadHandler(LockerRecord{}))
 
 	// endpoint for locker hardware
@@ -61,6 +62,23 @@ func readAllLockerTag(c echo.Context) error {
 		lrs[l.UID] = &lr
 	}
 	return c.JSON(http.StatusOK, lrs)
+}
+
+func readDoorEventWithLimit(c echo.Context) error {
+	slimit := c.QueryParam("limit")
+	limit, err := strconv.Atoi(slimit)
+	de := []LockerDoorEvent{}
+
+	if err != nil {
+		ListTable(&de)
+	} else {
+
+		timelimit := int(time.Now().Unix()) - limit
+		c.Logger().Debugf("timelimit=%d", timelimit)
+		SelectTable(&de, "closed_time > ?", timelimit)
+	}
+
+	return c.JSON(http.StatusOK, de)
 }
 
 func readLockerTagRecord(c echo.Context) error {
@@ -158,5 +176,5 @@ func createLockerDoorEvent(c echo.Context) error {
 		Duration:   req.Duration,
 		LockerUID:  uid,
 	}
-	return ParseSQLErrorToResponse(CreateRow(row), c)
+	return ParseSQLErrorToResponse(CreateRow(&row), c)
 }
