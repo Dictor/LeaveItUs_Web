@@ -48,6 +48,7 @@ export default {
             {label: "3시간", value: 10800},
             {label: "6시간", value: 21600},
             {label: "하루", value: 86400},
+            {label: "전체", value: ""},
         ],
         doorlimit: 3600
     }),
