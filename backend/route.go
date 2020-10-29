@@ -42,6 +42,10 @@ func AttachRoutes(e *echo.Echo) {
 	e.GET("/api/locker/:uid/door", readLockerDoorEvent)
 	e.POST("/api/locker/:uid/tag", createLockerTagRecord)
 	e.POST("/api/locker/:uid/door", createLockerDoorEvent)
+
+	e.GET("/api/version", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]string{"date": buildDate, "tag": gitTag, "commit": gitHash})
+	})
 }
 
 func readAllLockerTag(c echo.Context) error {
