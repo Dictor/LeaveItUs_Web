@@ -7,6 +7,7 @@
             :rows="tags"
             :dialog="dialog"
             ukey="uid"
+            disable_action="u"
             @create="addTag"
             @read="listTag"
             @update="updateTag"
@@ -89,7 +90,7 @@ export default {
                 return;
             }
             //in axios 0.20, axios.delete not working with data option
-            axios.request({data: {id: t}, url: "./api/tag", method: 'delete'})
+            axios.request({data: {uids: t}, url: "./api/tag", method: 'delete'})
                 .then(() => {
                     this.msgs.push({msg: "삭제 성공!", kind: "success"});
                 })
