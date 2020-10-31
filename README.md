@@ -80,7 +80,7 @@ sudo ./output/backend
 - Gateway는 MAC주소와 HTTP Request할 세부경로를 세부 설정해야 합니다.
 ```
 IoT_LeaveItUs_797IsPalindrome/ArduinoCode/Gateway.ino 코드에
-MAC 주소에 부대별 고유 MAC 주소를 설정해준다.
+부대별 고유 MAC 주소를 설정해준다.
 ```
 - 이후 serve 명령으로 서버를 실행하고 웹브라우저로 서버에 접속합니다.
 - 자세한 내용은 시연 영상을 참고해주세요!
