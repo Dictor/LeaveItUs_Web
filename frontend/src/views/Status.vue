@@ -61,11 +61,18 @@ export default {
                 return ["locker-disable"];
             } 
             let total = l.tags.length;
-            let current = this.unmarshal(this.lockerTag[l.uid].tag_uids).length;
-            if (total === current) {
-                return ["locker-good"]
-            } else {
-                return ["locker-warning"]
+            try {
+                if (this.lockerTag[l.uid].tag_uids && this.lockerTag[l.uid].tag_uids != "") {
+                    let current = this.unmarshal(this.lockerTag[l.uid].tag_uids).length;
+                    if (total === current) {
+                        return ["locker-good"]
+                    } else {
+                        return ["locker-warning"]
+                    }
+                }
+            } catch(err) {
+                console.log(err, this.lockerTag[l.uid]);
+                return ["locker-disable"];
             }
         },
         unmarshal: function(d) {
@@ -116,6 +123,7 @@ export default {
         setInterval(() => {
             this.valueTimeAgo = ((Date.now() - this.valueTime) / 1000).toFixed(1) + "초 전";
         }, 200);
+        this.prepareData();
     }
 }
 </script>
@@ -148,6 +156,7 @@ export default {
 
     .locker-wrapper {
         display: flex;
+        flex-flow: wrap;
     }
 
     .locker-disable {
