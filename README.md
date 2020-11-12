@@ -1,4 +1,4 @@
-# **맡기시오** (팀 *797은거꾸로해도797*)
+# [**맡기시오** (팀 *797은거꾸로해도797*)](https://github.com/Dictor/LeaveItUs_Web/commit/5da20d79b11bbf2e87609a178cde412545da83b1#commitcomment-44108342)
 ![팀 로고](logo.png)
 
 [**문서**](document) | [**발표자료**](PPT) | [**IoT 저장소**](https://github.com/osamhack2020/IoT_LeaveItUs_797IsPalindrome)
